@@ -1,16 +1,17 @@
 #include <string>
 #include <algorithm>
 #include <cmath>
+#include <gmpxx.h>
 
-namespace Number
+namespace Number_GMP
 {
 
 	class Rational
 	{
 	public:
-		using Type = int;
+		using Type = mpz_class;
 		Rational(Type num, Type den) { initialize(num, den); };
-		Rational() :numerator(1), denominator(1) {};//()invoke the constructor 
+		Rational() :numerator(1), denominator(1) {};
 		Rational(Type num) :numerator(num), denominator(1) {};
 
 		void initialize(const Type& num, const Type& den) {
@@ -91,6 +92,7 @@ namespace Number
 			return denominator;
 		}
 	};
+
 	inline const Rational operator+(const Rational &a, const Rational &b) {
 		return Rational(a.getnum() * b.getden() + b.getnum() * a.getden(), a.getden() * b.getden());
 	}
@@ -140,25 +142,32 @@ namespace Number
 	}
 
 	inline const Rational abs(const Rational &a) {
-		return Rational(std::abs(a.getnum()), a.getden());
+		return Rational(abs(a));
 	}
 
 
 	inline Rational::Type floor(const Rational &a) {
+		using FloatType = mpf_class;
+		using std::floor;
+
 		if (a.isInf())
 			return std::numeric_limits<Rational::Type>::max();
 		if (a.isNaN())
 			return 0;
 		else
-			return (Rational::Type)std::floor((long double)a.getnum() / a.getden());
+			return Rational::Type(floor(FloatType(a.getnum()) / FloatType(a.getden())));
 	}
 	inline Rational::Type ceil(const Rational &a) {
+		using FloatType = mpf_class;
+		using std::ceil;
+
 		if (a.isInf())
 			return std::numeric_limits<Rational::Type>::max();
 		if (a.isNaN())
 			return 0;
-		else
-			return (Rational::Type)std::ceil((long double)a.getnum() / a.getden());
+		else {
+			return Rational::Type(ceil(FloatType(a.getnum()) / FloatType(a.getden())));
+		}
 	}
 	inline Rational::Type fix(const Rational &a) {
 		if (a.getnum() > 0)
@@ -173,8 +182,14 @@ namespace Number
 	inline const Rational rem(const Rational &a, const Rational &b) {
 		return  a - (b * fix(a / b));
 	}
+
+	inline std::string to_string(const mpz_class &v) {
+		return v.get_str();
+	};
+
 	inline std::string to_string(const Rational &a) {
 		using std::to_string;
+		using ::Number_GMP::to_string;
 
 		if (a.isInt())
 			return to_string(a.getnum());
