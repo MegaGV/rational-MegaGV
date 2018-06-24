@@ -1,21 +1,13 @@
 #pragma once
+#ifndef _RATIONAL_TEMPLATE_H
+#define _RATIONAL_TEMPLATE_H
 #include <string>
 #include <algorithm>
 #include <cmath>
 #include <gmpxx.h>
 
-namespace Number_template
+namespace Number
 {
-	/*template <typename T>
-	struct ToInt;
-	struct ToInt<float>
-	{
-		using Type = int;
-	};
-	struct ToInt<mpf_class>
-	{
-		using Type = mpz_class;
-	};*/
 	template <typename T>
 	class Rational
 	{
@@ -316,7 +308,7 @@ namespace Number_template
 	template <>
 	inline std::string to_string<mpz_class>(const Rational<mpz_class> &a) {
 		using std::to_string;
-		using ::Number_template::to_string;
+		using ::Number::to_string;
 
 		if (a.isInt())
 			return a.getnum().get_str();
@@ -332,3 +324,4 @@ namespace Number_template
 		return v.get_str();
 	}
 }
+#endif
