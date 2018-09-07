@@ -21,24 +21,11 @@ namespace Number
 			Type g = gcd(num, den);
 			numerator = num / g;
 			denominator = den / g;
-			adjust(numerator, denominator);
+			if (denominator < 0) {
+				denominator = -denominator;
+				numerator = -numerator;
+			}
 			return *this;
-		}
-
-		static void adjust(Type &num, Type &den) {
-			bool _isnegative = false;
-			if (num < 0) {
-				num = -num;
-				_isnegative = !_isnegative;
-			}
-			if (den < 0) {
-				den = -den;
-				_isnegative = !_isnegative;
-			}
-
-			if (_isnegative) {
-				num = -num;
-			}
 		}
 
 		Rational& operator=(const Rational &r) {
